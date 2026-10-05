@@ -369,7 +369,9 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
   function chatHTML() {
     const T = totals();
     const openings = [p.doors ? `${p.doors} door${p.doors > 1 ? "s" : ""} 3×7` : "", p.wins ? `${p.wins} window${p.wins > 1 ? "s" : ""} 4×4` : ""].filter(Boolean).join(", ") || "no openings";
-    let h = `<div class="b me sk">${sketchSVG()}<div class="t">10:41 <i>✓✓</i></div></div>
+    const isDef = Object.keys(DEF).every(k => p[k] === DEF[k]);
+    const pic = isDef ? `<img src="sketch.jpg" alt="Photo of Ravi's pencil sketch of a 12 by 10 ft room" width="950" height="700" style="display:block;width:100%;height:auto;border-radius:7px">` : sketchSVG();
+    let h = `<div class="b me sk">${pic}<div class="t">10:41 <i>✓✓</i></div></div>
       <div class="b me"><div class="voice"><div class="play"></div><div class="wave">${wave(30, 3)}</div><span style="font-size:11px;color:var(--wa-sub)">0:09</span></div>
         <div class="kn">ಸಾರ್, ${knNum(p.W)} ಬೈ ${knNum(p.L)} ರೂಮ್ ಕಟ್ಟಬೇಕು, ${knNum(p.H)} ಅಡಿ ಎತ್ತರ.${p.tiles ? " ನೆಲಕ್ಕೆ ಟೈಲ್ಸ್." : ""} ಎಷ್ಟು ಆಗುತ್ತೆ?</div>
         <div class="t">10:41 <i>✓✓</i></div></div>
