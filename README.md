@@ -8,6 +8,10 @@ Team **Kernel Crew** · Hack Sprint 2026, Manipal University Bengaluru · Track 
 
 ![Nakshe demo](demo.gif)
 
+**The story in 90 seconds** (click to play):
+
+[![Watch the Nakshe story video](nakshe_story_poster.jpg)](https://bhaskar-kumar-arya.github.io/nakshe/nakshe_story.mp4)
+
 ---
 
 ## Contents
@@ -289,6 +293,7 @@ Targets for a 2-week pilot with 3 Bengaluru shops:
 - `index.html`: the interactive prototype. It contains the WhatsApp flow, the owner console and a working version of the take-off rule engine. Change the room in "What the AI read" and the sketch, the Kannada read-back and the full quote recalculate.
 - `sketch.jpg`: Ravi's hand sketch used in the demo.
 - `demo.gif`: a 24-second walkthrough of the prototype.
+- `nakshe_story.mp4`: a 90-second story video (one evening with Ravi and Manjunath), made with HyperFrames. `nakshe_story_poster.jpg` is its poster frame.
 
 The production build (WhatsApp, Gemini, Sarvam, n8n, Paytm) is what we will build at the event.
 
