@@ -19,12 +19,13 @@ Team **Kernel Crew** · Hack Sprint 2026, Manipal University Bengaluru · Track 
 6. [How the quantities are counted](#how-the-quantities-are-counted)
 7. [Data model](#data-model)
 8. [API and workflow](#api-and-workflow)
-9. [Built to be trusted](#built-to-be-trusted)
-10. [24-hour build plan](#24-hour-build-plan)
-11. [Demo on stage](#demo-on-stage)
-12. [Impact we will measure](#impact-we-will-measure)
-13. [Roadmap](#roadmap)
-14. [What is in this repo](#what-is-in-this-repo)
+9. [Talk to the shop (Trugen video agent)](#talk-to-the-shop-trugen-video-agent)
+10. [Built to be trusted](#built-to-be-trusted)
+11. [24-hour build plan](#24-hour-build-plan)
+12. [Demo on stage](#demo-on-stage)
+13. [Impact we will measure](#impact-we-will-measure)
+14. [Roadmap](#roadmap)
+15. [What is in this repo](#what-is-in-this-repo)
 
 ---
 
@@ -71,6 +72,8 @@ flowchart LR
     N8N <--> DB[("PostgreSQL<br/>rates · stock · quotes · payments")]
     N8N <--> OWN["Owner console<br/>React PWA"]
     N8N <--> PAY["Paytm Payment Links<br/>link out · webhook in"]
+    C <-.-> TRU["Trugen video agent<br/>Talk to the shop"]
+    TRU <--> ENG
     ENG <--> DB
 ```
 
@@ -135,6 +138,7 @@ flowchart LR
 | Data | PostgreSQL | Price list, stock, quotes and payments |
 | Payments | **Paytm Payment Links** (partner) | Advance link inside the quote; webhook marks it paid and holds stock |
 | Owner console | React PWA | Approve, edit a rate, track advances; runs on the counter's Android phone |
+| Video agent | **Trugen AI** (partner) | "Talk to the shop": a real-time video assistant that explains the quote and re-prices on request |
 
 ---
 
@@ -205,6 +209,41 @@ Anything the sketch does not show, such as a roof slab or lintel, is **flagged a
 
 ---
 
+## Talk to the shop (Trugen video agent)
+
+Contractors trust a person more than a table of numbers. Under every quote there is a **Talk to the shop** button that opens a live video call with the shop's AI assistant, built on Trugen's real-time conversational video agents.
+
+**What the contractor can do on the call**
+- Ask why: "Why 19 bags of cement?" The assistant explains the rule ("mortar for 9.25 m³ of brickwork plus 12 mm plaster on both faces") in plain words.
+- Change the job: "Make it 14 feet." The assistant calls our take-off API, and the revised quote and a new Paytm link arrive on WhatsApp while they are still talking.
+- Compare options: "Is there a cheaper cement?" The assistant offers in-stock substitutes from the shop's price list.
+- Speak naturally in Kannada, Hindi or English.
+
+**How it fits the architecture**
+
+```mermaid
+sequenceDiagram
+    participant C as Contractor
+    participant T as Trugen video agent
+    participant E as Take-off engine (FastAPI)
+    participant N as n8n workflow
+    C->>T: "Make it 14 feet" (live video call)
+    T->>E: POST /takeoff + /price (tool call, plan with new length)
+    E-->>T: new lines, total, rule used for each line
+    T-->>C: explains the change by voice
+    T->>N: revised quote for owner approval
+    N-->>C: revised quote + new Paytm link on WhatsApp
+```
+
+- **Knowledge base:** the confirmed plan, the quote with the rule behind each line, the shop's price list, delivery and payment terms.
+- **Tools the agent can call:** `/takeoff`, `/price`, and "send revised quote", which still goes through the owner's one-tap approval.
+- **Same rule as everywhere else:** the agent explains and collects changes; quantities still come only from the rule engine, and the owner still approves what is sent.
+- **Language:** Trugen's multilingual agents; Sarvam handles Kannada speech where it is stronger.
+
+**Build plan:** a stretch goal for the last hours of the event, after the core WhatsApp-to-payment loop works. The agent is configured through Trugen's API with the quote as its knowledge base and our FastAPI endpoints as tools.
+
+---
+
 ## Built to be trusted
 - **Every number is checked before it is sent.** The contractor confirms the dimensions, tested rules do the counting, and the owner approves with one tap.
 - **Understands how contractors really talk.** Sarvam's Indian-language speech models handle Kannada, Hindi and mixed speech, with tap-to-confirm buttons and typing as backups.
@@ -221,7 +260,7 @@ Anything the sketch does not show, such as a roof slab or lintel, is **flagged a
 | 4–10 | Gemini sketch reading and Sarvam voice, tested on 10 hand-drawn rooms |
 | 10–16 | Take-off rule engine and the shop's price list |
 | 16–20 | Paytm advance links and the owner console |
-| 20–24 | Hardening the demo, plus a recorded fallback video |
+| 20–24 | Hardening the demo, plus a recorded fallback video; stretch: Trugen "Talk to the shop" video agent |
 
 ## Demo on stage
 A judge draws a room on paper and sends it from their own phone. A Kannada voice quote and a Paytm advance link come back in under a minute, and the owner console shows exactly how every quantity was counted.
