@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nakshe Prototype</title>
+<meta name="description" content="Nakshe: a contractor's pencil sketch on WhatsApp becomes a priced quote with a Paytm advance link. Interactive prototype by Kernel Crew, Hack Sprint PS21.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&family=Barlow+Semi+Condensed:wght@500;600;700&family=Caveat:wght@500;700&family=Noto+Sans+Kannada:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout: guide bar on top, then the contractor's phone beside the shop owner's console; stacks on phones. */
+:root{
+  --ink:#14323a; --ink2:#4c646a; --line:#dbe3e2; --concrete:#eef1f0; --page:#e6ebea;
+  --teal:#0e7c80; --teal-soft:#e2f1f0; --amber:#f2a900; --amber-soft:#fff4d6;
+  --brick:#b8462f; --brick-soft:#fbeee9; --white:#fff;
+  --wa:#008069; --wa-out:#d9fdd3; --wa-wall:#efeae2; --wa-ink:#111b21; --wa-sub:#667781; --pay:#00baf2;
+  --f-ui:"Barlow","Segoe UI",system-ui,sans-serif;
+  --f-num:"Barlow Semi Condensed","Barlow","Segoe UI",sans-serif;
+  --f-kn:"Noto Sans Kannada","Nirmala UI",sans-serif;
+  --f-hand:"Caveat","Segoe Print",cursive;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--page);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.4;padding-inline:16px;padding-block:18px 28px}
+button{font:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.wrap{max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+
+/* top */
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand h1{margin:0;font-size:30px;font-weight:700;letter-spacing:-.3px}
+.brand p{margin:2px 0 0;color:var(--ink2);font-size:15px;max-width:60ch}
+.tag{font-size:13px;color:var(--ink2);background:var(--white);border:1px solid var(--line);border-radius:20px;padding:5px 12px;white-space:nowrap}
+.guide{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;list-style:none;margin:0;padding:0}
+.guide li{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;gap:10px;align-items:center;min-width:0;color:var(--ink2)}
+.guide b{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--concrete);color:var(--ink2);font-size:14px}
+.guide span{font-size:14px;line-height:1.25}
+.guide li.now{border-color:var(--teal);color:var(--ink);box-shadow:0 0 0 2px var(--teal-soft)}
+.guide li.now b{background:var(--teal);color:#fff}
+.guide li.done b{background:var(--teal-soft);color:var(--teal)}
+.hint{font-size:15px;color:var(--ink);background:var(--amber-soft);border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
+.hint button{background:none;border:1px solid #d9c27a;border-radius:8px;padding:5px 12px;color:var(--ink)}
+
+.stage{display:grid;grid-template-columns:372px minmax(0,1fr);gap:20px;align-items:start}
+
+/* phone */
+.phone{width:372px;height:800px;border-radius:50px;background:#1b1d1f;padding:12px;box-shadow:0 14px 34px rgba(20,50,58,.2)}
+.screen{position:relative;width:100%;height:100%;border-radius:39px;overflow:hidden;background:var(--wa-wall);display:flex;flex-direction:column}
+.status{height:32px;background:var(--wa);color:#fff;font-size:12px;display:flex;justify-content:space-between;align-items:flex-end;padding:0 26px 4px;font-weight:600}
+.head{background:var(--wa);color:#fff;display:flex;align-items:center;gap:10px;padding:8px 14px 10px}
+.av{width:38px;height:38px;border-radius:50%;background:#f4f1e8;color:var(--wa);display:grid;place-items:center;font-weight:700}
+.head b{display:block;font-size:15.5px;font-weight:600}
+.head small{font-size:12px;opacity:.85}
+.chat{flex:1;min-height:0;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:7px;
+  background-image:radial-gradient(rgba(0,0,0,.035) 1px,transparent 1px);background-size:14px 14px;scroll-behavior:smooth}
+.b{flex-shrink:0;max-width:84%;padding:6px 8px 4px;border-radius:9px;font-size:13.5px;color:var(--wa-ink);box-shadow:0 1px .5px rgba(0,0,0,.13);animation:pop .25s ease-out}
+.me{align-self:flex-end;background:var(--wa-out);border-top-right-radius:2px}
+.them{align-self:flex-start;background:var(--white);border-top-left-radius:2px}
+.t{font-size:10.5px;color:var(--wa-sub);text-align:right;margin-top:1px}
+.t i{font-style:normal;color:#53bdeb}
+.sk{padding:3px;width:210px}
+.sk svg{display:block;width:100%;height:auto;border-radius:7px}
+.voice{display:flex;align-items:center;gap:8px;width:230px}
+.play{width:0;height:0;border-left:11px solid #54656f;border-top:7px solid transparent;border-bottom:7px solid transparent;margin-left:4px}
+.wave{flex:1;height:22px;display:flex;align-items:center;gap:2px}
+.wave i{display:block;width:3px;border-radius:2px;background:#8696a0}
+.me .wave i{background:#7fae8a}
+.kn{font-family:var(--f-kn);font-size:12.5px;color:#3b4a54;margin-top:4px;border-top:1px solid rgba(0,0,0,.07);padding-top:4px}
+.b ul{margin:4px 0 2px;padding-left:16px}
+.btns{display:flex;gap:6px;margin-top:6px}
+.btns button{flex:1;font-size:13px;color:#027eb5;background:var(--white);border:1px solid #e3e7e9;border-radius:7px;padding:6px 0;font-weight:600}
+.btns button:disabled{color:#9aa8ae;cursor:default}
+.btns button.go:not(:disabled){animation:nudge 1.6s ease-in-out infinite}
+.quote{width:300px;padding:0;overflow:hidden}
+.qh{background:var(--ink);color:#fff;padding:8px 10px;display:flex;justify-content:space-between;align-items:baseline;font-family:var(--f-num)}
+.qh b{font-weight:600;font-size:15px}
+.qh small{font-size:11.5px;opacity:.8}
+.quote table{width:100%;border-collapse:collapse;font-size:12.5px}
+.quote td{padding:4px 10px;border-bottom:1px solid #eef0f0}
+.quote td.q{color:var(--wa-sub);white-space:nowrap}
+.quote td.r{text-align:right;font-family:var(--f-num);font-variant-numeric:tabular-nums;white-space:nowrap}
+.quote tr.tot td{border:0;font-weight:700;font-size:15px}
+.quote tr.tot td.r{font-size:18px;color:var(--ink)}
+.flag{margin:4px 10px 8px;font-size:12px;color:var(--brick);background:var(--brick-soft);border-radius:6px;padding:5px 7px}
+.paybtn{display:block;width:calc(100% - 20px);margin:0 10px 6px;background:var(--pay);color:#fff;border:0;border-radius:8px;padding:9px 8px;font-weight:700;font-size:14px}
+.paybtn small{display:block;font-weight:500;font-size:11px}
+.paybtn:not(:disabled){animation:nudge 1.6s ease-in-out infinite}
+.paybtn:disabled{background:#9fdcef;cursor:default;animation:none}
+.typing{align-self:flex-start;background:var(--white);border-radius:9px;padding:8px 12px;display:flex;gap:4px;box-shadow:0 1px .5px rgba(0,0,0,.13)}
+.typing i{width:6px;height:6px;border-radius:50%;background:#9aa8ae;animation:blink 1s infinite}
+.typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
+.bar{height:52px;background:#f0f2f5;display:flex;align-items:center;gap:8px;padding:0 10px}
+.bar div{flex:1;height:36px;background:var(--white);border-radius:18px;color:#8696a0;font-size:14px;display:flex;align-items:center;padding-left:14px}
+.mic{width:40px;height:40px;border-radius:50%;background:var(--wa)}
+.sheet{position:absolute;inset:0;background:rgba(17,27,33,.45);display:flex;align-items:flex-end}
+.sheet[hidden]{display:none}
+.sheet .card{background:var(--white);width:100%;border-radius:18px 18px 0 0;padding:18px 18px 22px;display:flex;flex-direction:column;gap:10px;animation:up .25s ease-out}
+.sheet h3{margin:0;font-size:17px}
+.sheet .amt{font-family:var(--f-num);font-size:34px;font-weight:700}
+.sheet .row2{display:flex;justify-content:space-between;font-size:13.5px;color:var(--ink2);border-top:1px solid var(--line);padding-top:8px}
+.sheet .confirm{background:var(--pay);color:#fff;border:0;border-radius:10px;padding:12px;font-weight:700;font-size:15px}
+.sheet .cancel{background:none;border:0;color:var(--ink2);padding:6px}
+.sheet .demo{font-size:12px;color:var(--brick);text-align:center}
+
+/* console */
+.console{background:var(--white);border-radius:16px;border:1px solid var(--line);overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) 262px;min-width:0}
+.c-main{padding:20px 18px;display:flex;flex-direction:column;gap:14px;min-width:0;border-right:1px solid var(--line)}
+.c-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.c-head .who{font-size:13px;color:var(--teal);font-weight:600}
+.c-head h2{margin:2px 0 0;font-size:24px;font-weight:600;text-wrap:balance}
+.c-head p{margin:2px 0 0;font-size:13.5px;color:var(--ink2)}
+.pill{font-size:13px;font-weight:600;padding:6px 12px;border-radius:20px;white-space:nowrap}
+.pill.wait{background:var(--concrete);color:var(--ink2)}
+.pill.ready{background:var(--amber-soft);color:#7a5600}
+.pill.sent{background:var(--teal-soft);color:var(--teal)}
+.pill.paid{background:var(--teal);color:#fff}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+.lines{width:100%;border-collapse:collapse;font-size:13.5px;min-width:590px}
+.lines th{font-weight:400;color:var(--ink2);text-align:left;padding:10px 12px 7px;font-size:12.5px;border-bottom:1px solid var(--line);background:var(--concrete)}
+.lines td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.lines td small{display:block;color:var(--ink2);font-size:12px;margin-top:1px}
+.lines .num{text-align:right;font-family:var(--f-num);font-variant-numeric:tabular-nums;white-space:nowrap;font-size:15px}
+.lines th.num{text-align:right}
+.ok{color:var(--teal);font-size:13px;white-space:nowrap}
+.part{color:#8a6a00;font-size:13px;white-space:nowrap}
+.lines tr.sug td{background:var(--amber-soft)}
+.lines tr:last-child td{border-bottom:0}
+.sw{display:inline-flex;align-items:center;gap:8px;background:none;border:0;padding:0;color:var(--ink);text-align:left}
+.sw i{flex:none;width:32px;height:18px;border-radius:9px;background:#cfd8d7;position:relative;transition:background .2s}
+.sw i::after{content:"";position:absolute;width:14px;height:14px;border-radius:50%;background:#fff;top:2px;left:2px;transition:left .2s}
+.sw[aria-pressed="true"] i{background:var(--amber)}
+.sw[aria-pressed="true"] i::after{left:16px}
+.foot{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.totals{display:flex;gap:28px;align-items:flex-end;flex-wrap:wrap}
+.totals div{font-size:13.5px;color:var(--ink2)}
+.totals b{display:block;font-family:var(--f-num);font-size:38px;line-height:1.05;color:var(--ink);font-weight:700}
+.totals .m b{font-size:22px;color:var(--teal)}
+.approve{background:var(--teal);color:#fff;border:0;border-radius:10px;padding:13px 20px;font-size:16px;font-weight:600}
+.approve:not(:disabled){animation:nudge 1.6s ease-in-out infinite}
+.approve:disabled{background:#b7c9c8;cursor:default;animation:none}
+.banner{border-radius:12px;padding:12px 14px;font-size:14.5px}
+.banner[hidden]{display:none}
+.banner.paid{background:var(--teal-soft);color:var(--ink)}
+.banner b{color:var(--teal)}
+
+.c-side{padding:20px 18px;display:flex;flex-direction:column;gap:12px;background:var(--concrete)}
+.c-side h3{margin:0;font-size:15px}
+.c-side p.note{margin:0;font-size:12.5px;color:var(--ink2)}
+.field{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px;font-size:14px}
+.field label{color:var(--ink2)}
+.field .ctl{display:flex;align-items:center;gap:6px}
+.field input[type=number]{width:62px;font:inherit;font-family:var(--f-num);font-size:15px;padding:5px 6px;border:1px solid var(--line);border-radius:7px;text-align:right;background:var(--white);color:var(--ink)}
+.field select{font:inherit;font-size:14px;padding:5px 6px;border:1px solid var(--line);border-radius:7px;background:var(--white);color:var(--ink)}
+.field .u{font-size:12.5px;color:var(--ink2);width:18px}
+.src{font-size:11.5px;color:var(--teal)}
+.missing{background:var(--brick-soft);border-radius:10px;padding:10px 12px;font-size:13px;color:#6b3326}
+.missing b{display:block;color:var(--brick);margin-bottom:2px}
+.reset{background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px;color:var(--ink);font-size:14px}
+.about{font-size:13px;color:var(--ink2);display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:space-between}
+
+@keyframes pop{from{transform:translateY(6px);opacity:.3}to{transform:none;opacity:1}}
+@keyframes up{from{transform:translateY(40px)}to{transform:none}}
+@keyframes blink{0%,100%{opacity:.3}50%{opacity:1}}
+@keyframes nudge{0%,100%{box-shadow:0 0 0 0 rgba(242,169,0,0)}50%{box-shadow:0 0 0 5px rgba(242,169,0,.45)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+@media (max-width:1260px){.console{grid-template-columns:minmax(0,1fr)}.c-main{border-right:0;border-bottom:1px solid var(--line)}}
+@media (max-width:900px){
+  .stage{grid-template-columns:minmax(0,1fr)}
+  .phone{margin:0 auto}
+  .guide{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:460px){
+  .phone{width:100%;height:740px;border-radius:24px;padding:6px}
+  .screen{border-radius:19px}
+  .guide{grid-template-columns:minmax(0,1fr)}
+  .brand h1{font-size:26px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg width="34" height="34" viewBox="0 0 22 22" aria-hidden="true"><path d="M3 4h16v14H3z M3 9h7 M10 4v14" fill="none" stroke="#f2a900" stroke-width="2.2"/></svg>
+      <div><h1>Nakshe</h1><p>A contractor's pencil sketch on WhatsApp becomes a priced quote with a Paytm advance link.</p></div>
+    </div>
+    <span class="tag">Interactive prototype · Kernel Crew · Hack Sprint PS21</span>
+  </header>
+
+  <ol class="guide" id="guide">
+    <li data-s="0"><b>1</b><span>Contractor sends a sketch and a Kannada voice note</span></li>
+    <li data-s="1"><b>2</b><span>Contractor confirms the plan the AI read</span></li>
+    <li data-s="2"><b>3</b><span>Shop owner checks the quote and approves</span></li>
+    <li data-s="3"><b>4</b><span>Contractor pays the advance, stock is held</span></li>
+  </ol>
+  <div class="hint" role="status" aria-live="polite"><span id="hint"></span><button id="restart" type="button">Start again</button></div>
+
+  <main class="stage">
+    <section class="phone" aria-label="Contractor's WhatsApp">
+      <div class="screen">
+        <div class="status"><span>10:42</span><span>5G 82%</span></div>
+        <div class="head"><div class="av">SL</div><div><b>Sri Lakshmi Hardware &amp; Cements</b><small>Business account · replies instantly</small></div></div>
+        <div class="chat" id="chat"></div>
+        <div class="bar"><div>Message</div><span class="mic"></span></div>
+        <div class="sheet" id="sheet" hidden>
+          <div class="card" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+            <h3 id="sheet-title">Paytm payment link</h3>
+            <div style="font-size:13.5px;color:var(--ink2)">Advance to Sri Lakshmi Hardware &amp; Cements</div>
+            <div class="amt" id="sheet-amt"></div>
+            <div class="row2"><span>Quote</span><span>Q-0412 · 20% advance</span></div>
+            <div class="row2"><span>Stock held for</span><span>48 hours after payment</span></div>
+            <button class="confirm" id="pay-confirm" type="button">Pay with UPI</button>
+            <button class="cancel" id="pay-cancel" type="button">Not now</button>
+            <div class="demo">Prototype: no real money moves.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="console" aria-label="Shop owner's console">
+      <div class="c-main">
+        <div class="c-head">
+          <div><div class="who">Nakshe · owner console</div><h2>Ravi K. · Kengeri site</h2><p id="meta">Contractor · sketch and Kannada voice note</p></div>
+          <span class="pill wait" id="pill">Waiting for Ravi to confirm</span>
+        </div>
+        <div class="banner paid" id="banner" hidden></div>
+        <div class="tablewrap">
+          <table class="lines">
+            <thead><tr><th>Item</th><th>How we counted</th><th>Stock</th><th class="num">Qty</th><th class="num">Amount</th></tr></thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+        <div class="foot">
+          <div class="totals"><div>Total incl. GST<b id="total"></b></div><div class="m">Your margin<b id="margin"></b></div></div>
+          <button class="approve" id="approve" type="button" disabled>Approve and send to Ravi</button>
+        </div>
+      </div>
+      <aside class="c-side">
+        <h3>What the AI read</h3>
+        <p class="note">Change a value to try a different sketch. Every quantity is recalculated by the rule engine.</p>
+        <div class="field"><label for="f-l">Length</label><span class="ctl"><input id="f-l" type="number" min="6" max="40" step="1" value="12"><span class="u">ft</span></span></div>
+        <div class="field"><label for="f-w">Width</label><span class="ctl"><input id="f-w" type="number" min="6" max="40" step="1" value="10"><span class="u">ft</span></span></div>
+        <div class="field"><label for="f-h">Wall height</label><span class="ctl"><input id="f-h" type="number" min="8" max="14" step="1" value="10"><span class="u">ft</span></span></div>
+        <div class="field"><label for="f-d">Doors (3×7 ft)</label><span class="ctl"><input id="f-d" type="number" min="0" max="4" step="1" value="1"><span class="u"></span></span></div>
+        <div class="field"><label for="f-n">Windows (4×4 ft)</label><span class="ctl"><input id="f-n" type="number" min="0" max="6" step="1" value="1"><span class="u"></span></span></div>
+        <div class="field"><label for="f-t">Floor</label><span class="ctl"><select id="f-t"><option value="1">2×2 ft tiles</option><option value="0">No flooring</option></select></span></div>
+        <p class="note"><span class="src">Source:</span> walls, openings and tiles from the sketch; height from the voice note. Walls are 9-inch brick.</p>
+        <div class="missing"><b>Not in the sketch</b>Roof slab and lintel. Ravi is asked; the quote covers walls, plaster and flooring.</div>
+        <button class="reset" id="reset" type="button">Back to Ravi's sketch</button>
+      </aside>
+    </section>
+  </main>
+
+  <footer class="about">
+    <span>Quantities use IS 1200 take-off rules: 500 bricks per m³ + 5% breakage, mortar 1:6, plaster 12 mm 1:4 on both faces, tiles + 8% cutting. Prices: Bengaluru market rates, Sep 2026.</span>
+    <span>Built by Kernel Crew for Hack Sprint 2026 (Manipal Bengaluru).</span>
+  </footer>
+</div>
+
+<script>
+(() => {
+  // ---------- rule engine (same maths as the deck) ----------
+  const FT = 0.3048, WALL = 0.75, DOOR = 3 * 7, WIN = 4 * 4;
+  const PRICE = { brick: 9, cement: 400, sand: 1300, tiles: 780, adhesive: 450, addon: 420 };
+  const MARGIN = { brick: .0946, cement: .12, sand: .10, tiles: .14, adhesive: .15, addon: .25 };
+  const STOCK = { brick: ["part", "Partner kiln"], cement: ["ok", "In stock · 140"], sand: ["ok", "Yard · 22 t"],
+                  tiles: ["ok", "In stock · 34"], adhesive: ["ok", "In stock · 18"], addon: ["ok", "In stock"] };
+  const inr = n => "₹" + Math.round(n).toLocaleString("en-IN");
+  const f1 = n => (Math.round(n * 100) / 100).toLocaleString("en-IN");
+
+  function takeoff(p) {
+    const open = p.doors * DOOR + p.wins * WIN;
+    const cl = 2 * ((p.L + WALL) + (p.W + WALL));
+    const wallSqft = Math.max(0, cl * p.H - open);
+    const vol = wallSqft * FT * FT * 0.23;
+    const bricks = Math.ceil(vol * 500 * 1.05 / 10) * 10;
+    const mortarDry = vol * 0.30;
+    const cemMortar = mortarDry / 7 * 1440 / 50;
+    const inner = Math.max(0, 2 * (p.L + p.W) * p.H - open);
+    const outer = Math.max(0, 2 * ((p.L + 2 * WALL) + (p.W + 2 * WALL)) * p.H - open);
+    const plasterM2 = (inner + outer) * FT * FT;
+    const plasterDry = plasterM2 * 0.012 * 1.33;
+    const cemPlaster = plasterDry / 5 * 1440 / 50;
+    const cement = Math.ceil(cemMortar + cemPlaster);
+    const sandM3 = mortarDry * 6 / 7 + plasterDry * 4 / 5;
+    const sandT = Math.ceil(sandM3 * 1.6 * 2) / 2;
+    const area = p.L * p.W;
+    const lines = [
+      { k: "brick", item: "Bricks 190×90×90", how: `${f1(vol)} m³ wall × 500 per m³ + 5% breakage`, sub: "IS 1200 take-off", qty: bricks, unit: "", chat: "Bricks", cq: `${bricks.toLocaleString("en-IN")} nos` },
+      { k: "cement", item: "Cement OPC 53", how: `Mortar 1:6 (${cemMortar.toFixed(1)}) + plaster 12 mm 1:4 (${cemPlaster.toFixed(1)})`, qty: cement, unit: " bags", chat: "Cement OPC 53", cq: `${cement} bags` },
+      { k: "sand", item: "M-sand", how: `Mortar ${f1(mortarDry * 6 / 7)} m³ + plaster ${f1(plasterDry * 4 / 5)} m³ × 1.6 t/m³`, qty: sandT, unit: " t", chat: "M-sand", cq: `${sandT} t` },
+    ];
+    if (p.tiles) {
+      const boxes = Math.ceil(area * 1.08 / 15.5), bags = Math.ceil(area / 45);
+      lines.push({ k: "tiles", item: "Vitrified tiles 600×600", how: `${area} sq ft + 8% cutting ÷ 15.5 sq ft per box`, qty: boxes, unit: " boxes", chat: "Tiles 2×2", cq: `${boxes} boxes` });
+      lines.push({ k: "adhesive", item: "Tile adhesive 20 kg", how: `${area} sq ft ÷ 45 sq ft per bag`, qty: bags, unit: " bags", chat: "Tile adhesive", cq: `${bags} bags` });
+    }
+    lines.forEach(l => { l.amt = l.qty * PRICE[l.k]; });
+    return lines;
+  }
+
+  // ---------- state ----------
+  const DEF = { L: 12, W: 10, H: 10, doors: 1, wins: 1, tiles: true };
+  let p = { ...DEF }, stage = 0, addon = false, typingTimer = null;
+  const $ = id => document.getElementById(id);
+  const chat = $("chat");
+
+  function totals() {
+    const lines = takeoff(p);
+    let total = lines.reduce((s, l) => s + l.amt, 0);
+    let margin = lines.reduce((s, l) => s + l.amt * MARGIN[l.k], 0);
+    if (addon && p.tiles) { total += PRICE.addon; margin += PRICE.addon * MARGIN.addon; }
+    return { lines, total, margin, advance: Math.round(total * 0.2) };
+  }
+
+  // ---------- hand sketch (SVG) ----------
+  function sketchSVG() {
+    const W = 440, Hh = 340, maxW = 300, maxH = 190;
+    const s = Math.min(maxW / p.L, maxH / p.W);
+    const rw = p.L * s, rh = p.W * s, x = 80 + (maxW - rw) / 2, y = 90 + (maxH - rh) / 2, t = 10;
+    const doorW = Math.min(3 * s, rw / 3), winH = Math.min(4 * s, rh / 2.5);
+    const dx = x + rw * 0.18;
+    let doors = "", wins = "";
+    for (let i = 0; i < p.doors; i++) {
+      const ddx = dx + i * (doorW + 14);
+      if (ddx + doorW > x + rw - 8) break;
+      doors += `<path d="M${ddx} ${y + rh - t - 2} L${ddx + doorW} ${y + rh - t - 2}" stroke="#fbfaf6" stroke-width="${t + 8}"/>
+        <path d="M${ddx} ${y + rh - t} L${ddx} ${y + rh - t - doorW}" stroke-width="1.6"/>
+        <path d="M${ddx} ${y + rh - t - doorW} Q${ddx + doorW * .85} ${y + rh - t - doorW * .85} ${ddx + doorW} ${y + rh - t}" stroke-width="1.1" stroke-dasharray="5 4"/>`;
+    }
+    for (let i = 0; i < p.wins; i++) {
+      const wy = y + rh * 0.25 + i * (winH + 10);
+      if (wy + winH > y + rh - 8) break;
+      wins += `<path d="M${x + rw - t / 2} ${wy} L${x + rw - t / 2} ${wy + winH}" stroke="#fbfaf6" stroke-width="${t + 4}"/>
+        <path d="M${x + rw - t} ${wy} L${x + rw} ${wy} M${x + rw - t} ${wy + winH} L${x + rw} ${wy + winH} M${x + rw - t / 2} ${wy} L${x + rw - t / 2} ${wy + winH}" stroke-width="1.5"/>`;
+    }
+    const tile = p.tiles ? `<path d="M${x + rw / 2 - 26} ${y + rh / 2 - 20} h52 v40 h-52 Z M${x + rw / 2} ${y + rh / 2 - 20} v40 M${x + rw / 2 - 26} ${y + rh / 2} h52" stroke-width="1.2"/>
+        <text x="${x + rw / 2 + 32}" y="${y + rh / 2 + 6}" font-size="17">tiles 2×2</text>` : "";
+    return `<svg viewBox="0 0 ${W} ${Hh}" role="img" aria-label="Hand sketch of a ${p.L} by ${p.W} ft room">
+      <defs><pattern id="g" width="16" height="16" patternUnits="userSpaceOnUse"><path d="M16 0H0V16" fill="none" stroke="#cfdde6" stroke-width="1"/></pattern>
+      <filter id="pen"><feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="4"/><feDisplacementMap in="SourceGraphic" scale="2.4"/></filter></defs>
+      <rect width="${W}" height="${Hh}" fill="#fbfaf6"/><rect width="${W}" height="${Hh}" fill="url(#g)"/>
+      <g filter="url(#pen)" stroke="#2f3033" fill="none" stroke-linecap="round">
+        <rect x="${x}" y="${y}" width="${rw}" height="${rh}" stroke-width="3.6"/>
+        <rect x="${x + t}" y="${y + t}" width="${rw - 2 * t}" height="${rh - 2 * t}" stroke-width="1.7"/>
+        ${doors}${wins}${tile}
+        <path d="M${x} ${y - 26} L${x + rw} ${y - 26} M${x} ${y - 34} v16 M${x + rw} ${y - 34} v16" stroke-width="1.5"/>
+        <path d="M${x - 26} ${y} L${x - 26} ${y + rh} M${x - 34} ${y} h16 M${x - 34} ${y + rh} h16" stroke-width="1.5"/>
+      </g>
+      <g font-family="Caveat, Segoe Print, cursive" fill="#2b2b2e">
+        <text x="${x + rw / 2 - 14}" y="${y - 34}" font-size="26">${p.L}'</text>
+        <text x="${x - 64}" y="${y + rh / 2 + 8}" font-size="26">${p.W}'</text>
+        <text x="${x + 16}" y="${y + 36}" font-size="20">H = ${p.H}'</text>
+        <text x="${x + 16}" y="${y + 58}" font-size="16">9" brick wall</text>
+        ${p.doors ? `<text x="${dx - 4}" y="${y + rh + 26}" font-size="16">door 3×7${p.doors > 1 ? " ×" + p.doors : ""}</text>` : ""}
+        ${p.wins ? `<text x="${Math.min(x + rw + 8, W - 76)}" y="${y + rh * 0.25 - 6}" font-size="16">window 4×4${p.wins > 1 ? " ×" + p.wins : ""}</text>` : ""}
+        <text x="${W - 150}" y="${Hh - 14}" font-size="17">Ravi · Kengeri site</text>
+      </g></svg>`;
+  }
+
+  // ---------- render ----------
+  const wave = (n, seed) => { let s = seed, out = ""; for (let i = 0; i < n; i++) { s = (s * 9301 + 49297) % 233280; out += `<i style="height:${5 + Math.round(s / 233280 * 16)}px"></i>`; } return out; };
+  const knNum = n => String(n);
+
+  function chatHTML() {
+    const T = totals();
+    const openings = [p.doors ? `${p.doors} door${p.doors > 1 ? "s" : ""} 3×7` : "", p.wins ? `${p.wins} window${p.wins > 1 ? "s" : ""} 4×4` : ""].filter(Boolean).join(", ") || "no openings";
+    let h = `<div class="b me sk">${sketchSVG()}<div class="t">10:41 <i>✓✓</i></div></div>
+      <div class="b me"><div class="voice"><div class="play"></div><div class="wave">${wave(30, 3)}</div><span style="font-size:11px;color:var(--wa-sub)">0:09</span></div>
+        <div class="kn">ಸಾರ್, ${knNum(p.W)} ಬೈ ${knNum(p.L)} ರೂಮ್ ಕಟ್ಟಬೇಕು, ${knNum(p.H)} ಅಡಿ ಎತ್ತರ.${p.tiles ? " ನೆಲಕ್ಕೆ ಟೈಲ್ಸ್." : ""} ಎಷ್ಟು ಆಗುತ್ತೆ?</div>
+        <div class="t">10:41 <i>✓✓</i></div></div>
+      <div class="b them"><span style="font-family:var(--f-kn)">ನಿಮ್ಮ ನಕ್ಷೆ ಹೀಗೆ ಓದಿದ್ದೇವೆ</span> · We read your plan as:
+        <ul><li>Room ${p.L} × ${p.W} ft, wall height ${p.H} ft</li><li>9-inch brick walls, ${openings}</li><li>Floor: ${p.tiles ? "2×2 ft vitrified tiles" : "not included"}</li></ul>
+        <div class="btns"><button type="button" class="go" id="yes" ${stage !== 0 ? "disabled" : ""}>Yes, correct</button><button type="button" id="change" ${stage !== 0 ? "disabled" : ""}>Change</button></div>
+        <div class="t">10:41</div></div>`;
+    if (stage >= 1) h += `<div class="b me"><span style="font-family:var(--f-kn)">ಹೌದು, ಸರಿ ಇದೆ</span> · Yes, correct<div class="t">10:42 <i>✓✓</i></div></div>
+      <div class="b them">Thanks. Your quote is being checked by the shop and will come in a moment.<div class="t">10:42</div></div>`;
+    if (stage >= 2) {
+      h += `<div class="b them quote"><div class="qh"><b>Quote Q-0412</b><small>valid 3 days · incl. GST</small></div><table>
+        ${T.lines.map(l => `<tr><td>${l.chat}</td><td class="q">${l.cq}</td><td class="r">${inr(l.amt)}</td></tr>`).join("")}
+        ${addon && p.tiles ? `<tr><td>Spacers + grout</td><td class="q">1 set</td><td class="r">${inr(PRICE.addon)}</td></tr>` : ""}
+        <tr class="tot"><td colspan="2">Total</td><td class="r">${inr(T.total)}</td></tr></table>
+        <div class="flag">No roof in sketch. Reply "roof" to add slab.</div>
+        <div style="padding:0 10px 6px" class="voice"><div class="play"></div><div class="wave">${wave(32, 9)}</div><span style="font-size:11px;color:var(--wa-sub)">0:24</span></div>
+        <button type="button" class="paybtn" id="pay" ${stage !== 2 ? "disabled" : ""}>${stage >= 3 ? "Advance paid" : `Pay ${inr(T.advance)} advance with Paytm`}<small>Your stock is held for 48 hours</small></button>
+        <div class="t" style="padding:0 8px 4px">10:43</div></div>`;
+    }
+    if (stage >= 3) h += `<div class="b them">Advance of ${inr(T.advance)} received. Your materials are held until 10:43 on Thursday. <span style="font-family:var(--f-kn)">ಧನ್ಯವಾದಗಳು</span><div class="t">10:44</div></div>`;
+    return h;
+  }
+
+  function render(showTyping) {
+    const T = totals();
+    chat.innerHTML = chatHTML() + (showTyping ? `<div class="typing" aria-label="typing"><i></i><i></i><i></i></div>` : "");
+    chat.scrollTop = chat.scrollHeight;
+
+    $("rows").innerHTML = T.lines.map(l => `<tr><td>${l.item}</td><td>${l.how}${l.sub ? `<small>${l.sub}</small>` : ""}</td>
+        <td class="${STOCK[l.k][0]}">${STOCK[l.k][1]}</td><td class="num">${l.qty.toLocaleString("en-IN")}${l.unit}</td><td class="num">${inr(l.amt)}</td></tr>`).join("")
+      + (p.tiles ? `<tr class="sug"><td><button type="button" class="sw" id="addon" aria-pressed="${addon}"><i></i>Add spacers + grout</button></td>
+        <td>Often forgotten for 2×2 tiles<small>Suggested add-on</small></td><td class="ok">In stock</td><td class="num">1 set</td><td class="num">+${inr(PRICE.addon)}</td></tr>` : "");
+    $("total").textContent = inr(T.total);
+    $("margin").textContent = `${inr(T.margin)} · ${(T.margin / T.total * 100).toFixed(1)}%`;
+
+    const pill = $("pill"), ap = $("approve"), banner = $("banner");
+    const P = [["wait", "Waiting for Ravi to confirm"], ["ready", "Drafted in 18 s · ready to approve"], ["sent", "Sent to Ravi · awaiting advance"], ["paid", "Advance received"]][stage];
+    pill.className = "pill " + P[0]; pill.textContent = P[1];
+    ap.disabled = stage !== 1;
+    ap.textContent = stage >= 2 ? "Sent to Ravi" : "Approve and send to Ravi";
+    $("meta").textContent = stage === 0 ? "Contractor · sketch and Kannada voice note received at 10:41" : "Contractor · plan confirmed by Ravi at 10:42";
+    banner.hidden = stage < 3;
+    banner.innerHTML = `<b>${inr(T.advance)} advance received</b> through Paytm. ${T.lines.map(l => `${l.qty.toLocaleString("en-IN")}${l.unit || " nos"} ${l.chat.toLowerCase()}`).join(", ")} held for 48 hours.`;
+
+    document.querySelectorAll("#guide li").forEach(li => {
+      const s = +li.dataset.s, cur = Math.min(stage + 1, 3);
+      li.className = s === cur && stage < 3 ? "now" : (s < cur || stage === 3 ? "done" : "");
+    });
+    $("hint").textContent = [
+      "Step 2: on the phone, tap \"Yes, correct\" to confirm the plan. You can also change the room on the right first.",
+      "Step 3: in the owner console, check how each quantity was counted, then tap \"Approve and send to Ravi\".",
+      "Step 4: on the phone, tap the Paytm button to pay the advance.",
+      "Done. The advance is in and the stock is held. Change the room on the right to try another sketch.",
+    ][stage];
+
+    const yes = $("yes"), change = $("change"), pay = $("pay"), sw = $("addon");
+    if (yes) yes.onclick = () => { stage = 1; render(true); clearTimeout(typingTimer); typingTimer = setTimeout(() => render(false), 900); };
+    if (change) change.onclick = () => { $("f-l").focus(); };
+    if (pay) pay.onclick = () => { if (stage === 2) openSheet(); };
+    if (sw) sw.onclick = () => { if (stage >= 2) return; addon = !addon; render(false); };
+  }
+
+  function openSheet() {
+    $("sheet-amt").textContent = inr(totals().advance);
+    $("sheet").hidden = false; $("pay-confirm").focus();
+  }
+  $("pay-confirm").onclick = () => { $("sheet").hidden = true; stage = 3; render(false); };
+  $("pay-cancel").onclick = () => { $("sheet").hidden = true; };
+  $("approve").onclick = () => { if (stage !== 1) return; stage = 2; render(true); clearTimeout(typingTimer); typingTimer = setTimeout(() => render(false), 700); };
+
+  const fields = { "f-l": ["L", 6, 40], "f-w": ["W", 6, 40], "f-h": ["H", 8, 14], "f-d": ["doors", 0, 4], "f-n": ["wins", 0, 6] };
+  Object.entries(fields).forEach(([id, [k, lo, hi]]) => {
+    $(id).addEventListener("input", e => {
+      const v = Math.round(Number(e.target.value));
+      if (!Number.isFinite(v)) return;
+      p[k] = Math.min(hi, Math.max(lo, v)); stage = 0; render(false);
+    });
+  });
+  $("f-t").addEventListener("change", e => { p.tiles = e.target.value === "1"; stage = 0; render(false); });
+  function syncFields() { $("f-l").value = p.L; $("f-w").value = p.W; $("f-h").value = p.H; $("f-d").value = p.doors; $("f-n").value = p.wins; $("f-t").value = p.tiles ? "1" : "0"; }
+  $("reset").onclick = () => { p = { ...DEF }; addon = false; stage = 0; syncFields(); render(false); };
+  $("restart").onclick = () => { stage = 0; addon = false; $("sheet").hidden = true; render(false); };
+  document.addEventListener("keydown", e => { if (e.key === "Escape") $("sheet").hidden = true; });
+
+  render(false);
+})();
+</script>
+</body>
+</html>
