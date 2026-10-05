@@ -10,7 +10,7 @@ Team **Kernel Crew** · Hack Sprint 2026, Manipal University Bengaluru · Track 
 
 **The story in 90 seconds** (click to play):
 
-[![Watch the Nakshe story video](nakshe_story_poster.jpg)](https://bhaskar-kumar-arya.github.io/nakshe/nakshe_story.mp4)
+[![Watch the Nakshe story video](nakshe_story_poster.jpg)](https://github.com/Bhaskar-kumar-arya/nakshe/blob/main/nakshe_story.mp4)
 
 ---
 
