@@ -30,18 +30,7 @@ body{background-color:var(--page);color:var(--ink);font-family:var(--f-ui);font-
   background-size:120px 120px,120px 120px,24px 24px,24px 24px}
 button{font:inherit;cursor:pointer}
 button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
-.wrap{max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
-
-/* top */
-.top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 24px}
-.brand{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-size:26px;font-weight:700;letter-spacing:.2px}
-.tag{font-size:13.5px;color:var(--ink2);background:var(--white);border:1px solid var(--line);border-radius:8px;padding:6px 12px}
-.tag b{color:var(--ink);font-weight:600}
-.hero{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 44px;align-items:end;padding-block:4px 2px}
-.hero .side{display:flex;flex-direction:column;gap:6px;padding-bottom:6px}
-.hero h1{margin:0;font-family:var(--f-display);font-weight:700;font-size:clamp(42px,5.6vw,80px);line-height:.9;letter-spacing:-.5px}
-.hero .kn{font-family:var(--f-kn);font-size:clamp(17px,2vw,22px);color:var(--teal);font-weight:500}
-.hero p{margin:0;font-size:17px;color:var(--ink2);max-width:60ch}
+.wrap{max-width:1280px;margin:0 auto;display:flex;flex-direction:column}
 
 /* measuring tape: the 4 steps */
 .track{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 20px;align-items:end;background:var(--white);border:1px solid var(--line);border-radius:14px;padding:14px 18px}
@@ -198,21 +187,156 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
   .track{grid-template-columns:minmax(0,1fr)}
   .track .restart{grid-column:1;grid-row:auto;justify-self:start}
 }
+
+/* ---------- site layer ---------- */
+html{scroll-behavior:smooth}
+.site-head{display:flex;align-items:center;justify-content:space-between;gap:12px 28px;flex-wrap:wrap;padding-block:4px 0}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-size:28px;font-weight:700;letter-spacing:.2px;color:var(--ink);text-decoration:none}
+.nav{display:flex;gap:6px 22px;flex-wrap:wrap;font-size:15.5px}
+.nav a{color:var(--ink);text-decoration:none;padding-block:4px;border-bottom:2px solid transparent}
+.nav a:hover{border-bottom-color:var(--tape)}
+a:focus-visible{outline:3px solid var(--amber);outline-offset:3px;border-radius:4px}
+
+.intro{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.02fr);gap:40px 56px;align-items:center;padding-block:48px 72px}
+.intro h1{margin:0;font-family:var(--f-display);font-weight:700;font-size:clamp(50px,6.6vw,100px);line-height:.88;letter-spacing:-.6px;color:var(--ink)}
+.intro .kn{margin-top:16px;font-family:var(--f-kn);font-size:clamp(18px,2vw,23px);color:var(--teal);font-weight:500}
+.intro .lede{margin:14px 0 0;font-size:18.5px;line-height:1.5;color:var(--ink2);max-width:44ch}
+.ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.btn{display:inline-flex;align-items:center;justify-content:center;border-radius:10px;padding:14px 22px;font-weight:600;font-size:16.5px;text-decoration:none}
+.btn.primary{background:var(--ink);color:#fff}
+.btn.primary:hover{background:#0e252b}
+.btn.ghost{background:var(--white);color:var(--ink);border:1px solid var(--line)}
+.btn.ghost:hover{border-color:var(--ink2)}
+.fine{margin-top:18px;font-size:14px;color:var(--ink2)}
+.fine b{color:var(--ink);font-weight:600}
+
+.art{position:relative;width:100%;max-width:640px;aspect-ratio:1.12;justify-self:end}
+.art .photo{position:absolute;left:0;top:3%;width:74%;height:auto;border-radius:6px;transform:rotate(-4deg);box-shadow:0 22px 44px rgba(20,50,58,.24),0 2px 6px rgba(20,50,58,.18)}
+.art .strip{position:absolute;width:96px;height:28px;background:rgba(242,183,5,.55);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.art .s1{left:-2%;top:2%;transform:rotate(-38deg)}
+.art .s2{left:58%;top:-1%;transform:rotate(24deg)}
+.scribble{position:absolute;left:9%;top:72%;font-family:var(--f-hand);font-size:32px;font-weight:700;color:var(--ink);transform:rotate(-5deg);line-height:1}
+.scribble svg{position:absolute;left:100%;top:-14px;margin-left:6px;overflow:visible}
+.receipt{position:absolute;right:0;bottom:4%;width:min(310px,50%);background:#fff;padding:18px 18px 20px;transform:rotate(2.5deg);
+  box-shadow:0 20px 40px rgba(20,50,58,.22),0 2px 6px rgba(20,50,58,.14);font-family:var(--f-num);color:var(--ink);
+  animation:print 1.15s .35s cubic-bezier(.2,.7,.2,1) both}
+.receipt::after{content:"";position:absolute;left:0;right:0;bottom:-11px;height:12px;
+  background:linear-gradient(-45deg,transparent 8px,#fff 0) 0 0/16px 12px repeat-x,linear-gradient(45deg,transparent 8px,#fff 0) 0 0/16px 12px repeat-x}
+.receipt .shop{font-weight:700;font-size:16px;line-height:1.15}
+.receipt .ref{font-size:12.5px;color:var(--ink2);margin-top:2px}
+.receipt .rule{border-top:1.5px dashed #b9c6c5;margin:10px 0}
+.receipt .row{display:grid;grid-template-columns:1fr auto auto;gap:10px;font-size:13.5px;padding:2.5px 0}
+.receipt .row span:nth-child(2){color:var(--ink2)}
+.receipt .row span:last-child{text-align:right;min-width:64px;font-variant-numeric:tabular-nums}
+.receipt .tot{display:flex;justify-content:space-between;align-items:baseline;font-weight:700}
+.receipt .tot b{font-size:30px;letter-spacing:-.3px}
+.stamp{display:inline-block;margin-top:12px;border:2px solid var(--teal);color:var(--teal);border-radius:7px;padding:5px 10px;font-weight:700;font-size:14px;transform:rotate(-5deg);background:rgba(226,241,240,.6)}
+@keyframes print{from{clip-path:inset(0 0 100% 0);transform:rotate(2.5deg) translateY(-14px)}to{clip-path:inset(0 0 -20px 0);transform:rotate(2.5deg)}}
+
+.section-head{display:flex;flex-direction:column;gap:8px;margin-bottom:22px}
+.section-head h2{margin:0;font-family:var(--f-display);font-weight:700;font-size:clamp(34px,4vw,52px);line-height:.95;letter-spacing:-.3px}
+.section-head p{margin:0;font-size:17px;color:var(--ink2);max-width:62ch}
+.demo{display:flex;flex-direction:column;gap:16px;padding-block:8px 24px}
+.demo .section-head{margin-bottom:6px}
+
+.rules{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:40px 56px;padding-block:80px 40px;align-items:start}
+.checks{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:20px;counter-reset:c}
+.checks li{display:grid;grid-template-columns:40px 1fr;gap:4px 14px;counter-increment:c}
+.checks li::before{content:counter(c);grid-row:1/3;width:34px;height:34px;border-radius:50%;background:var(--tape);color:var(--ink);display:grid;place-items:center;font-family:var(--f-num);font-weight:700;font-size:17px}
+.checks b{font-size:18px}
+.checks span{color:var(--ink2);font-size:16px;line-height:1.45}
+.notebook{background:#fff;border:1px solid var(--line);border-radius:14px;padding:26px 28px 28px;
+  background-image:linear-gradient(#e8eff1 1px,transparent 1px);background-size:100% 34px;background-position:0 70px}
+.notebook h3{margin:0;font-family:var(--f-display);font-size:30px;font-weight:700;line-height:1}
+.notebook .given{font-family:var(--f-hand);font-size:24px;color:var(--teal);margin:4px 0 14px;transform:rotate(-1deg)}
+.calc{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:0 18px;font-family:var(--f-num);font-size:17px;align-items:baseline}
+.calc > *{padding-block:5px;line-height:24px}
+.calc .k{font-weight:600}
+.calc .w{color:var(--ink2);min-width:0}
+.calc .r{text-align:right;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.calc .total{border-top:2px solid var(--ink);margin-top:8px;padding-top:10px;font-size:22px}
+.calc .total.r{border-bottom:5px double var(--ink);font-size:26px}
+.notebook .aside{font-family:var(--f-hand);font-size:22px;color:var(--brick);margin-top:16px;transform:rotate(-1deg)}
+
+.stack{padding-block:56px 32px}
+.tools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 36px;list-style:none;margin:0;padding:0}
+.tools li{border-top:1.5px solid var(--ink);padding:14px 0 22px;display:flex;flex-direction:column;gap:4px}
+.tools b{font-family:var(--f-display);font-size:26px;font-weight:700;line-height:1}
+.tools span{color:var(--ink2);font-size:15.5px;line-height:1.45}
+.tools em{font-style:normal;font-size:13px;color:var(--teal);font-weight:600}
+.tools em.plain{color:var(--ink2)}
+
+.site-foot{border-top:1px solid var(--grid2);margin-top:24px;padding-block:22px 4px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 28px;font-size:14px;color:var(--ink2)}
+.site-foot a{color:var(--ink)}
+.site-foot .nk{font-family:var(--f-display);font-size:22px;font-weight:700;color:var(--ink)}
+
+@media (max-width:980px){
+  .intro{grid-template-columns:minmax(0,1fr);padding-block:28px 48px}
+  .art{justify-self:center;max-width:560px}
+  .rules{grid-template-columns:minmax(0,1fr);padding-block:56px 24px}
+  .tools{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:520px){
+  .nav{display:none}
+  .tools{grid-template-columns:minmax(0,1fr)}
+  .receipt{width:62%;padding:12px 12px 14px}
+  .receipt .row{font-size:11.5px;gap:6px}.receipt .row span:last-child{min-width:50px}
+  .receipt .tot b{font-size:22px}
+  .scribble{font-size:24px;left:4%;top:74%}.scribble svg{width:70px}
+  .calc{font-size:15px;gap:0 10px}
+}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header class="top">
-    <div class="brand"><svg width="30" height="30" viewBox="0 0 22 22" aria-hidden="true"><path d="M3 4h16v14H3z M3 9h7 M10 4v14" fill="none" stroke="#f2a900" stroke-width="2.4"/></svg>Nakshe</div>
-    <span class="tag"><b>Clickable prototype with sample data.</b> The quantity rules are real. Kernel Crew, Hack Sprint PS21</span>
+  <header class="site-head">
+    <a class="brand" href="#top"><svg width="30" height="30" viewBox="0 0 22 22" aria-hidden="true"><path d="M3 4h16v14H3z M3 9h7 M10 4v14" fill="none" stroke="#f2a900" stroke-width="2.4"/></svg>Nakshe</a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#try">Try it</a>
+      <a href="#numbers">How the numbers hold up</a>
+      <a href="#built">Built with</a>
+      <a href="https://github.com/Bhaskar-kumar-arya/nakshe">GitHub</a>
+    </nav>
   </header>
 
-  <section class="hero">
-    <h1>Send the nakshe.<br>Get the price.</h1>
-    <div class="side"><div class="kn" lang="kn">ನಕ್ಷೆ ಕಳಿಸಿ, ಬೆಲೆ ಪಡೆಯಿರಿ</div>
-    <p>A contractor sends a pencil sketch and a Kannada voice note to the hardware shop on WhatsApp. A priced quote with a Paytm advance link comes back in under a minute.</p></div>
+  <section class="intro" id="top">
+    <div>
+      <h1>Send the nakshe.<br>Get the price.</h1>
+      <div class="kn" lang="kn">ನಕ್ಷೆ ಕಳಿಸಿ, ಬೆಲೆ ಪಡೆಯಿರಿ</div>
+      <p class="lede">A contractor sends a pencil sketch and a Kannada voice note to the hardware shop on WhatsApp. A priced quote with a Paytm advance link comes back in under a minute, and the owner approves it with one tap.</p>
+      <div class="ctas">
+        <a class="btn primary" href="#try">Try the prototype</a>
+        <a class="btn ghost" href="https://github.com/Bhaskar-kumar-arya/nakshe">Read it on GitHub</a>
+      </div>
+      <div class="fine"><b>Clickable prototype with sample data.</b> The quantity rules are real.</div>
+    </div>
+    <div class="art" aria-label="Ravi's pencil sketch turns into a printed estimate">
+      <img class="photo" src="sketch.jpg" width="950" height="700" alt="Pencil sketch of a 12 by 10 ft room on graph paper, lying on a shop counter">
+      <span class="strip s1" aria-hidden="true"></span><span class="strip s2" aria-hidden="true"></span>
+      <div class="scribble" aria-hidden="true">18 seconds
+        <svg width="110" height="50" viewBox="0 0 110 50"><path d="M4 34 C 34 44, 70 38, 100 12" fill="none" stroke="#14323a" stroke-width="2.4" stroke-linecap="round"/><path d="M87 12 L101 11 L97 25" fill="none" stroke="#14323a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="receipt">
+        <div class="shop">Sri Lakshmi Hardware &amp; Cements</div>
+        <div class="ref">Estimate Q-0412 for Ravi K., Kengeri site</div>
+        <div class="rule"></div>
+        <div class="row"><span>Bricks</span><span>4,860</span><span>₹43,740</span></div>
+        <div class="row"><span>Cement OPC 53</span><span>19 bags</span><span>₹7,600</span></div>
+        <div class="row"><span>M-sand</span><span>5.5 t</span><span>₹7,150</span></div>
+        <div class="row"><span>Tiles 2×2</span><span>9 boxes</span><span>₹7,020</span></div>
+        <div class="row"><span>Tile adhesive</span><span>3 bags</span><span>₹1,350</span></div>
+        <div class="rule"></div>
+        <div class="tot"><span>Total</span><b>₹66,860</b></div>
+        <span class="stamp">₹13,372 advance via Paytm</span>
+      </div>
+    </div>
   </section>
 
+  <section class="demo" id="try">
+    <div class="section-head">
+      <h2>Try it. You play both sides.</h2>
+      <p>Confirm the plan as Ravi on WhatsApp, approve the quote as the shop owner, then pay the advance. Change the room in “What the AI read” and every number recalculates.</p>
+    </div>
   <section class="track" aria-label="Progress">
     <div class="tape" id="tape">
       <div class="bar"></div>
@@ -281,10 +405,56 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
       </aside>
     </section>
   </main>
+  </section>
 
-  <footer class="about">
-    <span>Quantities use IS 1200 take-off rules: 500 bricks per m³ + 5% breakage, mortar 1:6, plaster 12 mm 1:4 on both faces, tiles + 8% cutting. Prices: Bengaluru market rates, Sep 2026.</span>
-    <span>Built by Kernel Crew for Hack Sprint 2026 (Manipal Bengaluru).</span>
+  <section class="rules" id="numbers">
+    <div>
+      <div class="section-head">
+        <h2>How the numbers hold up</h2>
+        <p>A wrong quantity costs the shop money or the job. So the AI never does the maths.</p>
+      </div>
+      <ol class="checks">
+        <li><b>The AI only reads</b><span>Gemini turns the sketch into dimensions and Sarvam turns the voice note into text. Neither one calculates.</span></li>
+        <li><b>The contractor confirms</b><span>The plan is read back on WhatsApp before any price is shown. Anything missing, like a roof slab, is asked for.</span></li>
+        <li><b>Rules do the counting</b><span>IS 1200 take-off rules, unit-tested on known rooms. Every line shows how it was counted.</span></li>
+        <li><b>The owner approves</b><span>Nothing leaves the shop without one tap, and the owner can edit any rate first.</span></li>
+      </ol>
+    </div>
+    <div class="notebook">
+      <h3>Ravi's room, worked out</h3>
+      <div class="given">12 × 10 ft · 10 ft walls · 9-inch brick · 1 door · 1 window</div>
+      <div class="calc">
+        <span class="k">Wall</span><span class="w">47 ft centre-line × 10 ft − door − window</span><span class="r">433 sq ft</span>
+        <span class="k">Volume</span><span class="w">433 sq ft × 0.23 m thick</span><span class="r">9.25 m³</span>
+        <span class="k">Bricks</span><span class="w">9.25 m³ × 500 per m³ + 5% breakage</span><span class="r">4,860</span>
+        <span class="k">Cement</span><span class="w">mortar 1:6 (11.4) + plaster 12 mm (7.4)</span><span class="r">19 bags</span>
+        <span class="k">M-sand</span><span class="w">3.41 m³ × 1.6 t per m³</span><span class="r">5.5 t</span>
+        <span class="k">Tiles</span><span class="w">120 sq ft + 8% ÷ 15.5 sq ft per box</span><span class="r">9 boxes</span>
+        <span class="k">Adhesive</span><span class="w">120 sq ft ÷ 45 sq ft per bag</span><span class="r">3 bags</span>
+        <span class="k total">Total</span><span class="w total">at Bengaluru rates, Sep 2026, incl. GST</span><span class="r total">₹66,860</span>
+      </div>
+      <div class="aside">The owner sees every one of these lines.</div>
+    </div>
+  </section>
+
+  <section class="stack" id="built">
+    <div class="section-head">
+      <h2>Built with</h2>
+      <p>Five of the six are Hack Sprint partner tools.</p>
+    </div>
+    <ul class="tools">
+      <li><b>WhatsApp</b><em class="plain">Channel</em><span>Where contractors already send photos and voice notes. Nothing to install.</span></li>
+      <li><b>n8n</b><em>Partner</em><span>Runs the loop: receive, understand, confirm, estimate, approve, send.</span></li>
+      <li><b>Google Gemini</b><em>Partner</em><span>Reads the sketch and site photo into dimensions, each with a confidence score.</span></li>
+      <li><b>Sarvam AI</b><em>Partner</em><span>Kannada voice note to text, and the spoken quote back.</span></li>
+      <li><b>Paytm</b><em>Partner</em><span>Advance link inside the quote; payment holds the stock for 48 hours.</span></li>
+      <li><b>Trugen AI</b><em>Partner</em><span>“Talk to the shop”: a live video assistant that explains and re-prices the quote.</span></li>
+    </ul>
+  </section>
+
+  <footer class="site-foot">
+    <div><span class="nk">Nakshe</span><br>Kernel Crew · Hack Sprint 2026, Manipal University Bengaluru · PS21</div>
+    <div>Clickable prototype with sample data; the quantity rules are real.<br>Code and README: <a href="https://github.com/Bhaskar-kumar-arya/nakshe">github.com/Bhaskar-kumar-arya/nakshe</a></div>
   </footer>
 </div>
 
